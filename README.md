@@ -8,6 +8,13 @@ A custom, zero-config Git merge driver specifically for Python that understands 
 
 Standard `git merge` relies on line-based diffing. If two developers modify adjacent lines with logically compatible intents (e.g., adding a decorator vs. changing a docstring), Git throws a conflict. `ast-intent-merge` eliminates these bottlenecks by analyzing the Concrete Syntax Tree (CST) and surgically merging the code.
 
+## The Real-World Problem 🌍
+Standard `git merge` relies on line-by-line text diffing. It doesn't actually know it's looking at Python code. Because of this, if two developers (or autonomous AI agents) modify lines right next to each other, Git panics and triggers a merge conflict.
+
+For example, if Developer A adds a `@staticmethod` decorator to a function, and Developer B adds a `"""docstring"""` to that exact same function, Git throws a conflict. Logically, these intents are perfectly compatible, but the text collision stops the entire pipeline.
+
+Whenever Git throws these false conflicts, a human has to stop what they are doing, open their editor, and manually resolve the text collision. For large teams working in the same files—and especially for multi-agent AI systems trying to code autonomously—this manual intervention is a massive roadblock. `ast-intent-merge` solves this by understanding the code's intent and surgically splicing it together, completely bypassing the need for human intervention.
+
 ## Features ✨
 - **True Semantic Understanding**: Merges changes at the function, class, and variable level instead of raw text.
 - **Formatting Preserved**: Uses `libcst` to retain exact original code formatting.
