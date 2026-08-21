@@ -24,7 +24,15 @@ Whenever Git throws these false conflicts, a human has to stop what they are doi
 ## Installation 🚀
 
 ### 1. Install the tool
+You can install it directly from GitHub without cloning:
 ```bash
+pip install git+https://github.com/ononymuos/ast-intent-merge.git
+```
+
+Alternatively, if you want to clone the repository locally first:
+```bash
+git clone https://github.com/ononymuos/ast-intent-merge.git
+cd ast-intent-merge
 pip install .
 ```
 
