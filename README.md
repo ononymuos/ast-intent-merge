@@ -22,11 +22,11 @@ pip install .
 ```
 
 ### 2. Configure Git Hooks
-Run the setup script to register the semantic driver in your local Git configuration:
+Run the built-in CLI to register the semantic driver in your local Git configuration:
 ```bash
-./setup_driver.sh
+ast-intent-merge install
 ```
-This seamlessly updates your `.git/config` and `.gitattributes` to route all `*.py` files through the AST merger.
+This seamlessly updates your `.git/config` and `.gitattributes` to route all `*.py` files through the AST merger. Use `--global` to install it across all your repositories.
 
 ## How it Works ⚙️
 1. Git passes the Ancestor, Ours, and Theirs file versions to the driver.
