@@ -22,6 +22,13 @@ A custom, zero-config Git merge driver specifically for Python that understands 
 
 Standard `git merge` relies on line-based diffing. If two developers modify adjacent lines with logically compatible intents (e.g., adding a decorator vs. changing a docstring), Git throws a conflict. `ast-intent-merge` eliminates these bottlenecks by analyzing the Concrete Syntax Tree (CST) and surgically merging the code.
 
+## The Real-World Problem 🌍
+Standard `git merge` relies on line-by-line text diffing. It doesn't actually know it's looking at Python code. Because of this, if two developers (or autonomous AI agents) modify lines right next to each other, Git panics and triggers a merge conflict.
+
+For example, if Developer A adds a `@staticmethod` decorator to a function, and Developer B adds a `"""docstring"""` to that exact same function, Git throws a conflict. Logically, these intents are perfectly compatible, but the text collision stops the entire pipeline.
+
+Whenever Git throws these false conflicts, a human has to stop what they are doing, open their editor, and manually resolve the text collision. For large teams working in the same files—and especially for multi-agent AI systems trying to code autonomously—this manual intervention is a massive roadblock. `ast-intent-merge` solves this by understanding the code's intent and surgically splicing it together, completely bypassing the need for human intervention.
+
 ## Features ✨
 - **True Semantic Understanding**: Merges changes at the function, class, and variable level instead of raw text.
 - **Formatting Preserved**: Uses `libcst` to retain exact original code formatting.
@@ -31,7 +38,15 @@ Standard `git merge` relies on line-based diffing. If two developers modify adja
 ## Installation 🚀
 
 ### 1. Install the tool
+You can install it directly from GitHub without cloning:
 ```bash
+pip install git+https://github.com/ononymuos/ast-intent-merge.git
+```
+
+Alternatively, if you want to clone the repository locally first:
+```bash
+git clone https://github.com/ononymuos/ast-intent-merge.git
+cd ast-intent-merge
 pip install .
 ```
 
@@ -41,6 +56,17 @@ Run the built-in CLI to register the semantic driver in your local Git configura
 ast-intent-merge install
 ```
 This seamlessly updates your `.git/config` and `.gitattributes` to route all `*.py` files through the AST merger. Use `--global` to install it across all your repositories.
+
+## Usage 💡
+
+Once installed and configured, `ast-intent-merge` runs completely automatically! 
+Whenever you run `git merge` or pull changes that affect Python files, Git will quietly invoke the AST merger instead of its default text-based merger to prevent false conflicts.
+
+### Manual Testing
+If you want to manually test a merge between files, you can use the CLI directly:
+```bash
+ast-intent-merge merge <current_file.py> <base_file.py> <other_file.py>
+```
 
 ## How it Works ⚙️
 1. Git passes the Ancestor, Ours, and Theirs file versions to the driver.
