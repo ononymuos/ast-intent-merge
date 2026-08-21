@@ -4,8 +4,8 @@ import gc
 import pytest
 
 # Add src to path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from parser import parse_and_extract, compare_nodes
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from ast_intent_merge.parser import parse_and_extract, compare_nodes
 
 def test_parse_and_extract_classes():
     code = "class MyClass:\n    pass\n"

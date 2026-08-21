@@ -23,4 +23,7 @@ classifiers = [
 ]
 
 [project.scripts]
-ast-intent-merge = "src.cli:main"
+ast-intent-merge = "ast_intent_merge.cli:main"
+
+[tool.setuptools]
+packages = ["ast_intent_merge"]

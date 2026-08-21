@@ -2,9 +2,9 @@ import gc
 import sys
 import os
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from parser import parse_and_extract
-from merger import SemanticMerger
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from ast_intent_merge.parser import parse_and_extract
+from ast_intent_merge.merger import SemanticMerger
 
 def test_semantic_merger_no_conflict():
     anc_code = "def a():\n    pass\ndef b():\n    pass\n"

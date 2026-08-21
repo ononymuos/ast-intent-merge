@@ -1,0 +1,2 @@
+[console_scripts]
+ast-intent-merge = ast_intent_merge.cli:main
