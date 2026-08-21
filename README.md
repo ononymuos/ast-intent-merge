@@ -35,6 +35,17 @@ ast-intent-merge install
 ```
 This seamlessly updates your `.git/config` and `.gitattributes` to route all `*.py` files through the AST merger. Use `--global` to install it across all your repositories.
 
+## Usage 💡
+
+Once installed and configured, `ast-intent-merge` runs completely automatically! 
+Whenever you run `git merge` or pull changes that affect Python files, Git will quietly invoke the AST merger instead of its default text-based merger to prevent false conflicts.
+
+### Manual Testing
+If you want to manually test a merge between files, you can use the CLI directly:
+```bash
+ast-intent-merge merge <current_file.py> <base_file.py> <other_file.py>
+```
+
 ## How it Works ⚙️
 1. Git passes the Ancestor, Ours, and Theirs file versions to the driver.
 2. The driver parses all three versions into syntax trees.
