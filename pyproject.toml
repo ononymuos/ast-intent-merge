@@ -23,4 +23,4 @@ classifiers = [
 ]
 
 [project.scripts]
-ast-intent-merge = "src.merge_driver:main"
+ast-intent-merge = "src.cli:main"
