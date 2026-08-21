@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ast-intent-merge"
+version = "1.0.0"
+description = "A zero-config semantic Git merge driver for Python that understands intent via AST/CST."
+authors = [
+    {name = "Usama Baig", email = "mearoobmughal@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "libcst>=1.0.0"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License"
+]
+
+[project.scripts]
+ast-intent-merge = "src.merge_driver:main"

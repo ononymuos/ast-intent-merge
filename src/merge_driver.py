@@ -1,10 +1,11 @@
 import sys
 import os
 import gc
+import libcst as cst
 
-# Add current dir to path to import our parser
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from parser import parse_and_extract, compare_nodes
+from parser import parse_and_extract
+from merger import SemanticMerger
 
 def main():
     if len(sys.argv) < 4:
@@ -24,50 +25,25 @@ def main():
         ours = parse_and_extract(ours_code)
         theirs = parse_and_extract(theirs_code)
     except Exception as e:
-        # Parsing failed; fallback to standard line merge
+        print(f"AST Parsing failed: {e}")
         gc.collect()
         sys.exit(1)
         
-    conflict = False
-    for btype in ["classes", "functions", "module_vars"]:
-        anc_b = anc["blocks"].get(btype, {})
-        our_b = ours["blocks"].get(btype, {})
-        thr_b = theirs["blocks"].get(btype, {})
-        
-        all_keys = set(anc_b.keys()) | set(our_b.keys()) | set(thr_b.keys())
-        
-        for k in all_keys:
-            node_anc = anc_b.get(k)
-            node_our = our_b.get(k)
-            node_thr = thr_b.get(k)
-            
-            def changed(n1, n2):
-                if n1 is None and n2 is None: return False
-                if n1 is None or n2 is None: return True
-                return not compare_nodes(n1, n2)
-                
-            our_changed = changed(node_anc, node_our)
-            thr_changed = changed(node_anc, node_thr)
-            
-            # If both changed the block relative to ancestor, check if they match
-            if our_changed and thr_changed:
-                if changed(node_our, node_thr):
-                    conflict = True
-                    break
-                    
-        if conflict:
-            break
-            
-    # Explicitly clear objects to stay within 2GB RAM limit
-    gc.collect()
+    merger = SemanticMerger(anc["blocks"], ours["blocks"], theirs["blocks"])
+    merged_module = anc["module"].visit(merger)
     
-    if conflict:
+    if merger.conflict_detected:
         print("Semantic conflict detected! Falling back to standard git merge.")
+        gc.collect()
         sys.exit(1)
-    else:
-        print("No semantic conflict detected. Allowing standard merge to handle distinct blocks.")
-        # Returning 1 safely permits git to interleave standard text edits if we don't do inline AST codegen rewriting here
-        sys.exit(1)
+        
+    # Write merged code to 'ours' path which Git uses for the resolution
+    with open(ours_path, 'w') as f:
+        f.write(merged_module.code)
+        
+    print("AST Intent Merge successful! Seamlessly combined distinct semantic blocks.")
+    gc.collect()
+    sys.exit(0)
 
 if __name__ == "__main__":
     main()
